@@ -1,40 +1,32 @@
-// src/components/ShoppingCart.js
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { increaseQty, decreaseQty, removeItem } from '../redux/cartSlice';
+import { increaseItem, decreaseItem, removeItem } from '../redux/cartSlice';
 
 const ShoppingCart = () => {
-  const cart = useSelector(state => state.cart);
+  const cartItems = useSelector(state => state.cart.items);
+  const totalItems = useSelector(state => state.cart.totalItems);
+  const totalPrice = useSelector(state => state.cart.totalPrice);
   const dispatch = useDispatch();
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Shopping Cart</h1>
-      {cart.items.length === 0 ? (
-        <p>Your cart is empty</p>
-      ) : (
-        <div>
-          {cart.items.map(item => (
-            <div key={item.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap:'10px' }}>
-              <img src={item.img} alt={item.name} style={{ width: '80px', height: '80px' }} />
-              <div>
-                <h4>{item.name}</h4>
-                <p>Unit Price: ${item.price}</p>
-                <p>Quantity: {item.quantity}</p>
-                <button onClick={() => dispatch(increaseQty(item.id))}>+</button>
-                <button onClick={() => dispatch(decreaseQty(item.id))}>-</button>
-                <button onClick={() => dispatch(removeItem(item.id))}>Delete</button>
-              </div>
-            </div>
-          ))}
-          <h3>Total Items: {cart.totalQuantity}</h3>
-          <h3>Total Price: ${cart.totalPrice}</h3>
-          <button onClick={() => alert('Coming Soon')}>Checkout</button>
-          <button onClick={() => window.location.href = '/products'}>Continue Shopping</button>
+    <div style={{ padding:'20px' }}>
+      <h2>Shopping Cart</h2>
+      <p>Total Items: {totalItems}</p>
+      <p>Total Price: ₹{totalPrice}</p>
+      {cartItems.map(item => (
+        <div key={item.id} style={{ display:'flex', gap:'20px', marginBottom:'10px', alignItems:'center' }}>
+          <img src={item.image} alt={item.name} style={{ width:'50px', height:'50px' }}/>
+          <span>{item.name}</span>
+          <span>₹{item.price}</span>
+          <button onClick={() => dispatch(increaseItem(item.id))}>+</button>
+          <button onClick={() => dispatch(decreaseItem(item.id))}>-</button>
+          <button onClick={() => dispatch(removeItem(item.id))}>Delete</button>
         </div>
-      )}
+      ))}
+      <button onClick={() => alert('Coming Soon!')}>Checkout</button>
+      <button onClick={() => window.location.href="/products"}>Continue Shopping</button>
     </div>
   );
-};
+}
 
 export default ShoppingCart;
