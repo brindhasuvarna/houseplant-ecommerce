@@ -1,45 +1,45 @@
-// src/components/ProductListing.js
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../redux/cartSlice';
 
-const plants = [
-  { id: 1, name: 'Fiddle Leaf Fig', price: 25, category: 'Indoor', img: 'fiddle.jpg' },
-  { id: 2, name: 'Snake Plant', price: 15, category: 'Indoor', img: 'snake.jpg' },
-  { id: 3, name: 'Aloe Vera', price: 10, category: 'Succulents', img: 'aloe.jpg' },
-  { id: 4, name: 'Jade Plant', price: 12, category: 'Succulents', img: 'jade.jpg' },
-  { id: 5, name: 'Lavender', price: 20, category: 'Outdoor', img: 'lavender.jpg' },
-  { id: 6, name: 'Rosemary', price: 18, category: 'Outdoor', img: 'rosemary.jpg' }
+const products = [
+  {id:1, name:'Aloe Vera', category:'Succulent', price:150, image:'aloe.jpg'},
+  {id:2, name:'Snake Plant', category:'Indoor', price:200, image:'snake.jpg'},
+  {id:3, name:'Fiddle Leaf Fig', category:'Indoor', price:500, image:'fig.jpg'},
+  {id:4, name:'Jade Plant', category:'Succulent', price:300, image:'jade.jpg'},
+  {id:5, name:'Peace Lily', category:'Flowering', price:400, image:'peace.jpg'},
+  {id:6, name:'Orchid', category:'Flowering', price:600, image:'orchid.jpg'},
 ];
-
-const categories = [...new Set(plants.map(p => p.category))];
 
 const ProductListing = () => {
   const dispatch = useDispatch();
+  const cartItems = useSelector(state => state.cart.items);
 
-  const handleAddToCart = (plant) => {
-    dispatch(addItem(plant));
-  };
+  const handleAdd = (product) => {
+    dispatch(addItem(product));
+  }
 
   return (
-    <div style={{ padding: '20px' }}>
-      {categories.map(category => (
-        <div key={category}>
-          <h2>{category}</h2>
-          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-            {plants.filter(p => p.category === category).map(plant => (
-              <div key={plant.id} style={{ border: '1px solid #ccc', padding: '10px', width: '150px', textAlign: 'center' }}>
-                <img src={plant.img} alt={plant.name} style={{ width: '100px', height: '100px' }} />
-                <h4>{plant.name}</h4>
-                <p>${plant.price}</p>
-                <button onClick={() => handleAddToCart(plant)}>Add to Cart</button>
-              </div>
-            ))}
+    <div style={{ padding:'20px' }}>
+      <h2>Products</h2>
+      <div style={{ display:'flex', flexWrap:'wrap', gap:'20px' }}>
+        {products.map(p => (
+          <div key={p.id} style={{ border:'1px solid #ccc', padding:'10px', width:'150px', textAlign:'center' }}>
+            <img src={p.image} alt={p.name} style={{ width:'100px', height:'100px' }}/>
+            <h4>{p.name}</h4>
+            <p>₹{p.price}</p>
+            <button
+              onClick={() => handleAdd(p)}
+              disabled={cartItems.some(item => item.id === p.id)}
+            >
+              Add to Cart
+            </button>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
-};
+}
 
 export default ProductListing;
+
